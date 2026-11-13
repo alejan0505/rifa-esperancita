@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escoge tu número - Rifa Esperancita</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; margin: 0; background: #f6fbf9; color: #1f2937; }
+  header { background: #0f766e; color: #fff; padding: 28px 18px 24px; text-align: center; }
+  header h1 { margin: 0 0 6px; font-size: 30px; }
+  header h1 span { color: #fde68a; }
+  header .phrase { font-weight: 700; font-size: 18px; margin: 10px 0 4px; }
+  header .sub { font-size: 15px; opacity: .95; margin: 0; }
+  .price { display: inline-block; margin-top: 14px; background: #f59e0b; color: #fff; font-weight: 800; font-size: 20px; padding: 8px 18px; border-radius: 999px; }
+  main { max-width: 860px; margin: 0 auto; padding: 18px 14px 40px; }
+  .card { background: #fff; border: 1px solid #d1e7e2; border-radius: 14px; padding: 18px; margin-bottom: 16px; }
+  .card h2 { color: #0f766e; margin: 0 0 10px; font-size: 20px; }
+  .prizes { list-style: none; padding: 0; margin: 0; columns: 2; }
+  .prizes li { margin-bottom: 6px; font-size: 15px; }
+  .draw { font-size: 17px; font-weight: 700; }
+  .draw small { display: block; font-weight: 400; color: #4b5563; font-size: 14px; margin-top: 4px; }
+  .counters { display: flex; gap: 10px; margin: 4px 0 14px; }
+  .counter { flex: 1; text-align: center; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 12px; padding: 12px 6px; }
+  .counter.sold { background: #fef2f2; border-color: #fecaca; }
+  .counter b { display: block; font-size: 26px; color: #0f766e; }
+  .counter.sold b { color: #b91c1c; }
+  .counter span { font-size: 13px; color: #4b5563; }
+  #search { width: 100%; font-size: 17px; padding: 12px 14px; border: 2px solid #0f766e; border-radius: 10px; margin-bottom: 10px; }
+  .groups { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .groups a { text-decoration: none; font-size: 13px; color: #0f766e; border: 1px solid #0f766e; border-radius: 999px; padding: 5px 10px; }
+  .group-title { font-weight: 800; color: #0f766e; margin: 18px 0 8px; font-size: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(74px, 1fr)); gap: 8px; }
+  .num { border: 1px solid #99d5cf; background: #fff; color: #0f766e; font-weight: 700; font-size: 16px; padding: 12px 4px; border-radius: 10px; cursor: pointer; }
+  .num:hover { background: #ccfbf1; }
+  .num.sold { background: #fee2e2; color: #b91c1c; border-color: #fca5a5; text-decoration: line-through; cursor: not-allowed; }
+  .hidden { display: none !important; }
+  #panel { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 3px solid #0f766e; box-shadow: 0 -6px 24px rgba(0,0,0,.18); padding: 20px 18px 26px; text-align: center; z-index: 10; }
+  #panel h3 { margin: 0 0 6px; color: #0f766e; font-size: 22px; }
+  #panel p { margin: 6px 0 14px; color: #4b5563; }
+  .wa { display: inline-block; background: #25d366; color: #fff; font-weight: 800; font-size: 18px; text-decoration: none; padding: 14px 26px; border-radius: 999px; }
+  .close { display: block; margin: 12px auto 0; background: none; border: none; color: #6b7280; font-size: 15px; cursor: pointer; text-decoration: underline; }
+  footer { text-align: center; color: #6b7280; font-size: 13px; padding: 0 14px 30px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🎟️ Rifa Solidaria<br><span>Para Esperancita</span></h1>
+  <p class="phrase">Unidos por Esperancita, unidos por su salud y su vida.</p>
+  <p class="sub">Tu ayuda cubre enfermeras y medicinas para su recuperación.</p>
+  <span class="price">$3 por boleto</span>
+</header>
+<main>
+  <div class="card">
+    <h2>🎁 Premios</h2>
+    <ol class="prizes">
+      <li>1. Televisión de 32 pulgadas</li>
+      <li>2. Air fryer digital</li>
+      <li>3. Tetera</li>
+      <li>4. ABC de frenos de bicicleta</li>
+      <li>5. Limpieza facial a domicilio</li>
+      <li>6, 7 y 8. Premios sorpresa</li>
+    </ol>
+    <p class="draw">📅 Sorteo: miércoles 16 de diciembre de 2026
+      <small>Con los últimos dígitos de la Lotería Nacional del Ecuador.</small>
+    </p>
+    <p style="margin:6px 0 0;">Organiza: Lorena Pazmiño, hija de Esperancita<br>Contacto: +593 98 351 0022</p>
+  </div>
+
+  <div class="counters">
+    <div class="counter"><b id="cAvail">998</b><span>disponibles</span></div>
+    <div class="counter sold"><b id="cSold">2</b><span>vendidos</span></div>
+  </div>
+
+  <input id="search" type="text" inputmode="numeric" placeholder="🔍 Busca tu número, por ejemplo 0042" autocomplete="off">
+  <div class="groups" id="groups"></div>
+  <div id="list"></div>
+  <p id="noresult" class="hidden" style="text-align:center;color:#b91c1c;font-weight:700;">Ese número no está disponible o no existe. Prueba con otro.</p>
+</main>
+
+<div id="panel" class="hidden">
+  <h3 id="panelTitle">¡El número 0042 está disponible!</h3>
+  <p>Toca el botón verde y te escribe directo a Alejandra por WhatsApp para reservarlo y coordinar tu pago.</p>
+  <a class="wa" id="waBtn" href="#" target="_blank" rel="noopener">✅ Reservar por WhatsApp</a>
+  <button class="close" onclick="document.getElementById('panel').classList.add('hidden')">Cerrar</button>
+</div>
+
+<footer>Al escoger tu número te escribe directo al WhatsApp de Alejandra para confirmar y coordinar tu pago. ¡Gracias por ayudar! ❤️</footer>
+
+<script>
+  // NÚMEROS VENDIDOS: agrega aquí cada número vendido (sin ceros a la izquierda).
+  var SOLD = [13, 14];
+  var TOTAL = 1000;
+  var soldSet = {};
+  SOLD.forEach(function(n){ soldSet[n] = true; });
+  document.getElementById('cAvail').textContent = TOTAL - SOLD.length;
+  document.getElementById('cSold').textContent = SOLD.length;
+
+  var list = document.getElementById('list');
+  var groupsEl = document.getElementById('groups');
+  var groups = [];
+  for (var g = 0; g < 10; g++) {
+    var start = g * 100 + 1, end = (g + 1) * 100;
+    groups.push([start, end]);
+    var a = document.createElement('a');
+    a.href = '#g' + g;
+    a.textContent = String(start).padStart(4, '0') + '–' + String(end).padStart(4, '0');
+    groupsEl.appendChild(a);
+  }
+  groups.forEach(function(range, gi){
+    var h = document.createElement('div');
+    h.className = 'group-title';
+    h.id = 'g' + gi;
+    h.textContent = 'Números ' + String(range[0]).padStart(4, '0') + ' al ' + String(range[1]).padStart(4, '0');
+    list.appendChild(h);
+    var grid = document.createElement('div');
+    grid.className = 'grid';
+    for (var n = range[0]; n <= range[1]; n++) {
+      (function(num){
+        var b = document.createElement('button');
+        b.className = 'num' + (soldSet[num] ? ' sold' : '');
+        b.textContent = String(num).padStart(4, '0');
+        b.dataset.num = String(num).padStart(4, '0');
+        if (!soldSet[num]) {
+          b.onclick = function(){ openPanel(num); };
+        }
+        grid.appendChild(b);
+      })(n);
+    }
+    list.appendChild(grid);
+  });
+
+  function openPanel(num){
+    var s = String(num).padStart(4, '0');
+    document.getElementById('panelTitle').textContent = '¡El número ' + s + ' está disponible!';
+    var msg = 'Hola Alejandra, quiero reservar el número ' + s + ' de la Rifa Solidaria para Esperancita. ¿Sigue disponible?';
+    document.getElementById('waBtn').href = 'https://wa.me/14078188168?text=' + encodeURIComponent(msg);
+    document.getElementById('panel').classList.remove('hidden');
+    document.getElementById('panel').scrollIntoView({behavior: 'smooth', block: 'center'});
+  }
+
+  document.getElementById('search').addEventListener('input', function(){
+    var q = this.value.replace(/\D/g, '');
+    var noresult = document.getElementById('noresult');
+    var found = false;
+    document.querySelectorAll('.num').forEach(function(b){
+      var match = !q || b.dataset.num.indexOf(q) === 0 || parseInt(b.dataset.num, 10) === parseInt(q || '-1', 10);
+      var show = !q || match;
+      b.classList.toggle('hidden', !show);
+      if (show && !b.classList.contains('sold')) found = true;
+    });
+    document.querySelectorAll('.group-title').forEach(function(h){
+      var grid = h.nextElementSibling;
+      var anyVisible = grid.querySelector('.num:not(.hidden)');
+      h.classList.toggle('hidden', !anyVisible);
+      grid.classList.toggle('hidden', !anyVisible);
+    });
+    noresult.classList.toggle('hidden', !q || found);
+  });
+</script>
+</body>
+</html>
